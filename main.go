@@ -15,7 +15,7 @@ import (
 
 func main() {
 	var (
-		resequencerType = flag.String("resequencerType", "batch",
+		resequencerType = flag.String("resequencerType", "stream",
 			"Resequencer type, can be 'batch' or 'stream'")
 
 		resequencerCap = flag.Int("resequencerCapacity", 100,
