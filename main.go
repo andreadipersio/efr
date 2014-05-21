@@ -3,6 +3,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"runtime"
 
 	"github.com/andreadipersio/efr/event"
@@ -30,6 +31,7 @@ func main() {
 	flag.Parse()
 
 	runtime.GOMAXPROCS(*maxProcs)
+	log.Printf("Maximum number of concurrent threads set to %v", *maxProcs)
 
 	// Acknowledge event source disconnection
 	ctrlChan := make(chan interface{})
