@@ -5,12 +5,11 @@ efr
 
 *efr* stands for **Event Forwarder**.
 
-Is purpouse is to get a stream of unordered events and forwarding them
+Given a stream of unordered events, forward them
 in the correct order to all connected clients, in a social graph fashion.
 
-The system is written in **golang** and provide 4 main modules.
+The system is written in **golang** and his composed by 4 main modules.
 
-## Data types
 ### event
 It provide the `Event` data type which represent an event and
 the `Subscriber` interface which define subscriber behaviour.
@@ -24,24 +23,23 @@ the `Subscriber` interface which define subscriber behaviour.
 **event.Subscriber**
 Please refer to the golang docs.
 
-## Handling external connections
 ### listener
 Listen for TCP connection from an Event Source.
 Once a connection is made it start reading CRLF terminated strings from
 the event source and forward them to the **event-dispatcher**.
 
-Before dispatching events go through a **resequencer** which reorder events
+Before dispatching, events go through a **resequencer** which reorder them
 based on their sequence ID.
 
 Two type of resequencer are supported:
 (`resequencerType` parameter)
 
-- 'batch' sequencer: each event is appended in a buffer, once buffer length reach **resequencerCapacity**
+- 'batch' resequencer: each event is appended in a buffer, once buffer length reach **resequencerCapacity**
 event are ordered and then sent through the event channel.
 The bigger the capacity, the more memory is consumed and client can timeout waiting
 for data.
 
-- 'stream' sequencer: Everytime an event is received, it order the buffer and verify that every
+- 'stream' resequencer: Everytime an event is received, it order the buffer and verify that every
 element in the buffer has a progressive sequence number.
 CPU intensive, client can timeout waiting for data if event source randomness is high.
 
@@ -56,7 +54,6 @@ Once ID is received a **SubscriptionRequest** is created, containing
 
 SubscriptionRequest are then sent through subscription channel.
 
-## Internal processing and forwarding
 ### dispatcher
 Listen to the following channels:
 
