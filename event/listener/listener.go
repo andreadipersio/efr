@@ -65,7 +65,13 @@ func (l *Listener) Listen() {
 // handleEventSourceConnection handle a tcp connection sending
 // batch of events.
 func (l *Listener) handleEventSourceConnection(conn net.Conn) {
-	defer conn.Close()
+	defer func() {
+		// notify other routines of event source disconnection
+		l.EventSourceCloseChan <- nil
+
+		// terminate connection with event source
+		conn.Close()
+	}()
 
 	resequencer := NewResequencer(l.ResequencerType, l.ResequencerCapacity)
 	scanner := bufio.NewScanner(conn)
@@ -89,11 +95,10 @@ func (l *Listener) handleEventSourceConnection(conn net.Conn) {
 		resequencer.Resequence(evt, l.DispatchChan)
 	}
 
-	log.Println("EventSource disconnected")
+	log.Println("  = EventSource disconnected")
+
 	// send all events in resequencer buffer (guaranted to be sorted)
 	resequencer.Flush(l.DispatchChan)
-	// notify other routines of event source disconnection
-	l.EventSourceCloseChan <- nil
 
 	return
 }
