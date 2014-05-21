@@ -92,7 +92,7 @@ func (r *BatchResequencer) Resequence(e *event.Event, dspChan chan *event.Event)
 // as they represent a linear
 type StreamResequencer struct {
 	Capacity  int
-	buffer    []*event.Event
+	buffer    map[int]*event.Event
 	lastIndex int
 }
 
@@ -105,37 +105,47 @@ func (r *StreamResequencer) Flush(outChan chan *event.Event) {
 		return
 	}
 
-	sort.Sort(event.BySequence(r.buffer))
+	// create a temporary buffer slice to sort events
+	buff := []*event.Event{}
 
 	for _, e := range r.buffer {
+		buff = append(buff, e)
+	}
+
+	// reset buffer
+	r.buffer = map[int]*event.Event{}
+
+	// order slice
+	sort.Sort(event.BySequence(buff))
+
+	// send item in order
+	for _, e := range buff {
 		outChan <- e
 	}
 
-	r.buffer = r.buffer[:0]
+	// clear our temporary buffer slice
+	buff = buff[:0]
 }
 
 func NewStreamResequencer(capacity int) *StreamResequencer {
 	return &StreamResequencer{
 		Capacity: capacity,
-		buffer:   []*event.Event{},
+		buffer:   map[int]*event.Event{},
 	}
 }
 
 func (r *StreamResequencer) Resequence(e *event.Event, dspChan chan *event.Event) {
-	r.buffer = append(r.buffer, e)
-	sort.Sort(event.BySequence(r.buffer))
+	r.buffer[e.Sequence] = e
 
-	buffer := []*event.Event{}
-	copy(buffer, r.buffer)
-
-	for i, e := range buffer {
-		index := i + r.lastIndex
-
-		if index == e.Sequence-1 {
-			dspChan <- e
-			r.buffer = append(r.buffer[:index], r.buffer[index+1])
+	// Check if we have a valid sequence
+	for {
+		nextSeqNum := r.lastIndex + 1
+		if s, ok := r.buffer[nextSeqNum]; ok {
+			dspChan <- s
+			r.lastIndex++
+			delete(r.buffer, nextSeqNum)
 		} else {
-			r.lastIndex = index
+			break
 		}
 	}
 }
