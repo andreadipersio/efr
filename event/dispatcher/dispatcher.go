@@ -69,18 +69,11 @@ func New(
 	ctrlChan chan interface{},
 	subscriberFactory event.SubscriberFactoryType,
 ) *Dispatcher {
-	dsp := &Dispatcher{
+	return &Dispatcher{
 		DispatchChan:         dspChan,
 		SubscriptionChan:     subChan,
 		EventSourceCloseChan: ctrlChan,
 		SubscriberFactory:    subscriberFactory,
+		directory:            NewDirectory(subscriberFactory),
 	}
-
-	// Initialize the subscriber directory
-	dsp.directory = &dispatchDirectory{
-		storage:           map[string]event.Subscriber{},
-		subscriberFactory: subscriberFactory,
-	}
-
-	return dsp
 }
