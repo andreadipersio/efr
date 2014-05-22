@@ -8,8 +8,6 @@ efr
 Given a stream of unordered events, forward them
 in the correct order to all connected clients, in a social graph fashion.
 
-The system is written in **golang** and his composed by 4 main modules.
-
 ### usage
 Install using `go install` and run by invoking `efr`
 
@@ -27,6 +25,8 @@ This will start the program with default values:
 --clientPort=9099
 --sequenceIndex=0
 ```
+
+## Components
 
 ### event
 It provide the `Event` and `Subscriber` interface
@@ -48,7 +48,7 @@ subscriber ID and returning a concrete User value.
 ### listener
 Listen for TCP connection from an Event Source.
 Once a connection is made it start reading CRLF terminated strings from
-the event source and forward them to the **event-dispatcher**.
+the event source and forward them to **dispatcher**.
 
 Before dispatching, events go through a **resequencer** which reorder them
 based on their sequence ID.
@@ -61,7 +61,7 @@ event are ordered and then sent through the event channel.
 The bigger the capacity, the more memory is consumed and client can timeout waiting
 for data.
 
-- 'stream' resequencer: Everytime an event is received, it order the buffer and verify that every
+- 'stream' resequencer [default]: Everytime an event is received, it order the buffer and verify that every
 element in the buffer has a progressive sequence number.
 CPU intensive, client can timeout waiting for data if event source randomness is high.
 
@@ -89,3 +89,7 @@ them as disconnected subscriber if they do not exist) and invoke ther `HandleEve
 and close the connection
 
 [Diagram](https://www.dropbox.com/s/qe08veyzsurn0m1/eft-diagram.png)
+
+### followersmaze
+Contains demo implementations for **event.Subscriber** and **event.Event**,
+used in *main.go*, implementing the basic events of any social service (follow, unfollow, etc).
