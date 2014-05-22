@@ -1,4 +1,4 @@
-package followersmaze
+package example
 
 import (
 	"fmt"

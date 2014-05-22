@@ -90,6 +90,6 @@ and close the connection
 
 [Diagram](https://www.dropbox.com/s/qe08veyzsurn0m1/eft-diagram.png)
 
-### followersmaze
+### example
 Contains demo implementations for **event.Subscriber** and **event.Event**,
 used in *main.go*, implementing the basic events of any social service (follow, unfollow, etc).

@@ -8,7 +8,7 @@ import (
 	"github.com/andreadipersio/efr/event"
 	"github.com/andreadipersio/efr/event/dispatcher"
 	"github.com/andreadipersio/efr/event/subscription"
-	"github.com/andreadipersio/efr/followersmaze"
+	"github.com/andreadipersio/efr/example"
 )
 
 // Need to implement io.WriteCloser on top of a bytes buffer
@@ -33,8 +33,8 @@ func (b *testBuffer) Close() error {
 }
 
 var (
-	subscriberFactory = followersmaze.NewUser
-	eventFactory      = followersmaze.NewEvent
+	subscriberFactory = example.NewUser
+	eventFactory      = example.NewEvent
 )
 
 func createSubscribtionRequest(

@@ -1,10 +1,10 @@
-package followersmaze
+package example
 
 import (
 	"log"
 	"testing"
 
-	"github.com/andreadipersio/efr/followersmaze"
+	"github.com/andreadipersio/efr/example"
 )
 
 // TestParse prove that Event.Parse method is able
@@ -28,7 +28,7 @@ func TestParse(t *testing.T) {
 	}
 
 	for _, testEvent := range testEvents {
-		evt, err := followersmaze.NewEvent(testEvent.payload)
+		evt, err := example.NewEvent(testEvent.payload)
 
 		// Test should fail, but it hasn't!
 		if !testEvent.isValid && err == nil {
@@ -57,7 +57,7 @@ func TestString(t *testing.T) {
 	}
 
 	for _, testEvent := range testEvents {
-		e, err := followersmaze.NewEvent(testEvent.payload)
+		e, err := example.NewEvent(testEvent.payload)
 
 		if e.String() != testEvent.payload {
 			log.Fatalf("Got '%v', expected '%v'", e, testEvent.payload)

@@ -1,4 +1,4 @@
-// Run event forwarder using followersmaze event and subscriber implementation
+// Run event forwarder using example event and subscriber implementation
 package main
 
 import (
@@ -10,7 +10,7 @@ import (
 	"github.com/andreadipersio/efr/event/dispatcher"
 	"github.com/andreadipersio/efr/event/listener"
 	"github.com/andreadipersio/efr/event/subscription"
-	"github.com/andreadipersio/efr/followersmaze"
+	"github.com/andreadipersio/efr/example"
 )
 
 func main() {
@@ -58,7 +58,7 @@ func main() {
 		eventChan,
 		subChan,
 		ctrlChan,
-		followersmaze.NewUser,
+		example.NewUser,
 	)
 
 	listener := listener.New(
@@ -66,7 +66,7 @@ func main() {
 		eventChan,
 		ctrlChan,
 		resequencerConfig,
-		followersmaze.NewEvent,
+		example.NewEvent,
 	)
 
 	// Listen for event source connection.

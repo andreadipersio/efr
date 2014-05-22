@@ -1,4 +1,4 @@
-// followersmaze package implement subscriber.Subscriber interface
+// example package implement subscriber.Subscriber interface
 // using User data type.
 
 // Supported events:
@@ -7,7 +7,7 @@
 //      'U' Unfollow: Remove event source from event recipient follower list
 //      'P' Private Message: Notify event recipient of a new private message
 //      'S' Status Update: Notify all followers of event source
-package followersmaze
+package example
 
 import (
 	"fmt"

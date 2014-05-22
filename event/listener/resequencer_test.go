@@ -9,13 +9,13 @@ import (
 
 	"github.com/andreadipersio/efr/event"
 	"github.com/andreadipersio/efr/event/listener"
-	"github.com/andreadipersio/efr/followersmaze"
+	"github.com/andreadipersio/efr/example"
 )
 
 // testResequencer prove that resequencer is able to resequence
 // unordered events
 func testResequencer(t *testing.T, r listener.Resequencer, batchSize int) {
-	eventFactory := followersmaze.NewEvent
+	eventFactory := example.NewEvent
 
 	rand.Seed(42)
 

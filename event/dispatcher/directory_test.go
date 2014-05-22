@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/andreadipersio/efr/event/dispatcher"
-	"github.com/andreadipersio/efr/followersmaze"
+	"github.com/andreadipersio/efr/event/example"
 )
 
-var subscriberFactory = followersmaze.NewUser
+var subscriberFactory = example.NewUser
 
 func TestGetOrcreate(t *testing.T) {
 	testSubscriberID := "foo"

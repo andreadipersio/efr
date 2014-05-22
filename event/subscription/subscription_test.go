@@ -13,7 +13,7 @@ import (
 // a channel
 func TestSubscription(t *testing.T) {
 	// setup server
-	port := 11111
+	port := 123123
 	addr := fmt.Sprintf("localhost:%v", port)
 
 	subChan := make(chan *subscription.SubscriptionRequest)
