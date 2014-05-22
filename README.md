@@ -10,18 +10,40 @@ in the correct order to all connected clients, in a social graph fashion.
 
 The system is written in **golang** and his composed by 4 main modules.
 
+### usage
+Install using `go install` and run by invoking `efr`
+
+```shell
+cd $GOPATH
+go install github.com/andreadipersio/efr
+bin/efr
+```
+
+This will start the program with default values:
+```shell
+--resequencerType=stream
+--maxProcs=1
+--eventSourcePort=9090
+--clientPort=9099
+--sequenceIndex=0
+```
+
 ### event
-It provide the `Event` data type which represent an event and
-the `Subscriber` interface which define subscriber behaviour.
+It provide the `Event` and `Subscriber` interface
 
 **event.Event**
-- Sequence: A unique sequence ID
-- Type: A string which represent the event type (follow, unfollow, etc)
-- SourceID: Who generated the event?
-- RecipientID: Who is the recipient of the event?
+An interface that describe behaviour of events.
+Event should implement methods to access their Sequence number,
+sender and recipient id.
+Factory for this method is a function that take a string and parse it 
+returning a concrete Event value.
 
 **event.Subscriber**
-Please refer to the golang docs.
+An interface that describe behaviour of subscribers.
+Subscriber should implement method to handle different event types
+and access their ID.
+Factory for this method is a function that take a string, representing
+subscriber ID and returning a concrete User value.
 
 ### listener
 Listen for TCP connection from an Event Source.

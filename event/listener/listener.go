@@ -26,16 +26,14 @@ type Listener struct {
 	Port int
 
 	// Resequenced events are sent through this channel
-	DispatchChan chan *event.Event
+	DispatchChan chan event.Event
 
 	// Use to inform other routines of EventSource disconnection
 	EventSourceCloseChan chan interface{}
 
-	ResequencerType string
+	ResequencerConfig *ResequencerConfig
 
-	// Max size of incoming events queue.
-	// The bigger the value, the bigger the memory consumption.
-	ResequencerCapacity int
+	EventFactory event.EventFactoryType
 }
 
 // Listen for incoming connection from EventSource
@@ -73,7 +71,7 @@ func (l *Listener) handleEventSourceConnection(conn net.Conn) {
 		conn.Close()
 	}()
 
-	resequencer := NewResequencer(l.ResequencerType, l.ResequencerCapacity)
+	resequencer := NewResequencer(l.ResequencerConfig)
 	scanner := bufio.NewScanner(conn)
 
 	log.Printf("  = EventSource connected, %s enabled", resequencer)
@@ -85,14 +83,14 @@ func (l *Listener) handleEventSourceConnection(conn net.Conn) {
 		}
 
 		payload := scanner.Text()
-		evt, err := event.FromString(payload)
+		e, err := l.EventFactory(payload)
 
 		if err != nil {
-			log.Printf("Cannot decode payload: %v", err)
+			log.Printf("Cannot create event: %v", err)
 			continue
 		}
 
-		resequencer.Resequence(evt, l.DispatchChan)
+		resequencer.Resequence(e, l.DispatchChan)
 	}
 
 	log.Println("  = EventSource disconnected")
@@ -105,16 +103,16 @@ func (l *Listener) handleEventSourceConnection(conn net.Conn) {
 
 func New(
 	port int,
-	dspChan chan *event.Event,
+	dspChan chan event.Event,
 	ctrlChan chan interface{},
-	resequencerType string,
-	resequencerCap int,
+	resequencerConfig *ResequencerConfig,
+	eventFactory event.EventFactoryType,
 ) *Listener {
 	return &Listener{
 		Port:                 port,
 		DispatchChan:         dspChan,
 		EventSourceCloseChan: ctrlChan,
-		ResequencerCapacity:  resequencerCap,
-		ResequencerType:      resequencerType,
+		ResequencerConfig:    resequencerConfig,
+		EventFactory:         eventFactory,
 	}
 }

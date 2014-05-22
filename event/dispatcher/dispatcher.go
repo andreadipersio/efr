@@ -18,7 +18,7 @@ const (
 // dispatching events on a subscribers directory
 type Dispatcher struct {
 	// DispatchChan receive incoming events
-	DispatchChan chan *event.Event
+	DispatchChan chan event.Event
 
 	// SubscriptionChan receive incoming client connection
 	SubscriptionChan chan *subscription.SubscriptionRequest
@@ -50,7 +50,7 @@ func (dsp *Dispatcher) Dispatch() {
 			dsp.directory.Subscribe(s)
 		case e := <-dsp.DispatchChan:
 			// Broadcast
-			if e.Type == BROADCAST_ETYPE {
+			if e.EventType() == BROADCAST_ETYPE {
 				dsp.directory.Broadcast(e)
 			} else {
 				sender, recipient := dsp.directory.SenderAndRecipientFromEvent(e)
@@ -64,7 +64,7 @@ func (dsp *Dispatcher) Dispatch() {
 }
 
 func New(
-	dspChan chan *event.Event,
+	dspChan chan event.Event,
 	subChan chan *subscription.SubscriptionRequest,
 	ctrlChan chan interface{},
 	subscriberFactory event.SubscriberFactoryType,
