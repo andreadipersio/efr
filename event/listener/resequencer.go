@@ -100,8 +100,7 @@ func (r *BatchResequencer) Resequence(e event.Event, dspChan chan event.Event) {
 	}
 }
 
-// A Stream resequencer which send messages as soon
-// as they represent a linear
+// A Stream resequencer implementation
 type StreamResequencer struct {
 	buffer    map[int]event.Event
 	lastIndex int
@@ -145,6 +144,9 @@ func NewStreamResequencer(config *ResequencerConfig) *StreamResequencer {
 	}
 }
 
+// Resequence events in a map and check if an event  with sequence equal
+// to lastindex + 1 exist, if so, then it send it through dspChan and
+// increase lastIndex by 1.
 func (r *StreamResequencer) Resequence(e event.Event, dspChan chan event.Event) {
 	r.buffer[e.SequenceNum()] = e
 

@@ -10,7 +10,6 @@
 
 // Once an EventSource disconnect, EventSourceCloseChan is sent a value,
 // which other routines can use to handle event source disconnection.
-
 package listener
 
 import (
