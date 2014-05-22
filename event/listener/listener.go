@@ -3,11 +3,11 @@
 // It listen for incoming tcp connection and start decoding events sent
 // unordered through that connection.
 // Reading is performed using buffered io.
-
+//
 // Once an event is decoded a resequencing strategy is applied,
 // ensuring that outgoing events are sent in the correct order regarding
 // in respect to their sequence ID.
-
+//
 // Once an EventSource disconnect, EventSourceCloseChan is sent a value,
 // which other routines can use to handle event source disconnection.
 package listener
