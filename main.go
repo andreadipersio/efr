@@ -26,9 +26,19 @@ func main() {
 
 		eventSourcePort = flag.Int("eventSourcePort", 9090, "EventSource connection port")
 		subPort         = flag.Int("clientPort", 9099, "Clients will subscribe using to this port")
+
+		sequenceIndex = flag.Int("sequenceIndex", 0,
+			"Last know sequence number. Stream resequencer "+
+				"will start resequencing from sequenceIndex+1")
 	)
 
 	flag.Parse()
+
+	resequencerConfig := &listener.ResequencerConfig{
+		*resequencerType,
+		*resequencerCap,
+		*sequenceIndex,
+	}
 
 	runtime.GOMAXPROCS(*maxProcs)
 	log.Printf("Maximum number of concurrent threads set to %v", *maxProcs)
@@ -37,19 +47,26 @@ func main() {
 	ctrlChan := make(chan interface{})
 
 	// Dispatcher will wait for ordered events on that channel
-	eventChan := make(chan *event.Event)
+	eventChan := make(chan event.Event)
 
 	// Client connections
 	subChan := make(chan *subscription.SubscriptionRequest)
 
 	subscriptionServer := subscription.New(*subPort, subChan)
-	dispatcher := dispatcher.New(eventChan, subChan, ctrlChan, followersmaze.NewUser)
+
+	dispatcher := dispatcher.New(
+		eventChan,
+		subChan,
+		ctrlChan,
+		followersmaze.NewUser,
+	)
+
 	listener := listener.New(
 		*eventSourcePort,
 		eventChan,
 		ctrlChan,
-		*resequencerType,
-		*resequencerCap,
+		resequencerConfig,
+		followersmaze.NewEvent,
 	)
 
 	// Listen for event source connection.

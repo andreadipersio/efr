@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+
 	"github.com/andreadipersio/efr/event"
 )
 
@@ -51,11 +52,11 @@ func (u *User) SetID(ID string) {
 	u.id = ID
 }
 
-func (sender *User) HandleEvent(e *event.Event, recipient event.Subscriber) error {
-	switch e.Type {
+func (sender *User) HandleEvent(e event.Event, recipient event.Subscriber) error {
+	switch e.EventType() {
 	// Unfollow
 	case UNFOLLOW_ETYPE:
-		recipient.RemoveFollower(e.SenderID)
+		recipient.RemoveFollower(e.SenderID())
 
 	// Follow
 	case FOLLOW_ETYPE:
@@ -76,7 +77,7 @@ func (sender *User) HandleEvent(e *event.Event, recipient event.Subscriber) erro
 	return nil
 }
 
-func (u *User) SendEvent(e *event.Event) {
+func (u *User) SendEvent(e event.Event) {
 	// user is not connected, ignore silently
 	if u.conn == nil {
 		return
@@ -111,7 +112,7 @@ func (u *User) RemoveFollower(followerID string) {
 	delete(u.followers, followerID)
 }
 
-func (u *User) followersBroadcast(e *event.Event) {
+func (u *User) followersBroadcast(e event.Event) {
 	for _, follower := range u.GetFollowers() {
 		follower.SendEvent(e)
 	}

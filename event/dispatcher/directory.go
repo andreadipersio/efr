@@ -47,7 +47,7 @@ func (d *dispatchDirectory) UnsubscribeAll() {
 }
 
 // Broadcast send event e to all subscribers in the directory
-func (d *dispatchDirectory) Broadcast(e *event.Event) {
+func (d *dispatchDirectory) Broadcast(e event.Event) {
 	for _, s := range d.storage {
 		s.SendEvent(e)
 	}
@@ -55,6 +55,6 @@ func (d *dispatchDirectory) Broadcast(e *event.Event) {
 
 // SenderAndRecipientFromEvent return event Sender and event Receiver.
 // If they are not registered in the directory, create them.
-func (d *dispatchDirectory) SenderAndRecipientFromEvent(e *event.Event) (event.Subscriber, event.Subscriber) {
-	return d.GetOrCreate(e.SenderID), d.GetOrCreate(e.RecipientID)
+func (d *dispatchDirectory) SenderAndRecipientFromEvent(e event.Event) (event.Subscriber, event.Subscriber) {
+	return d.GetOrCreate(e.SenderID()), d.GetOrCreate(e.RecipientID())
 }
