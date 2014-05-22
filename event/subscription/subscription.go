@@ -8,15 +8,17 @@ package subscription
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 )
 
 // SubscriptionRequest associate a client identified by an ID
-// with it's tcp connection
+// with a WriteCloser object, in our case a TCPConnection but can be
+// for example, a buffer, to ease testing
 type SubscriptionRequest struct {
 	SubscriberID string
-	Conn         *net.TCPConn
+	Conn         io.WriteCloser
 }
 
 // Subscription server listen for client connection

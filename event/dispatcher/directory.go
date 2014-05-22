@@ -8,7 +8,7 @@ type dispatchDirectory struct {
 	subscriberFactory event.SubscriberFactoryType
 }
 
-// GetOrCreate try to get a subscriber from directory, if it does not exist,
+// GetOrCreate try to get a subscriber from directory by its ID, if it does not exist,
 // create a disconnected user
 func (d *dispatchDirectory) GetOrCreate(subscriberID string) event.Subscriber {
 	subscriber, exist := d.storage[subscriberID]
@@ -22,14 +22,21 @@ func (d *dispatchDirectory) GetOrCreate(subscriberID string) event.Subscriber {
 	return d.storage[subscriberID]
 }
 
-// Create a new disconnected directory subscriber
+// GetByID mimic map lookup, returning item or nil and a boolean value
+func (d *dispatchDirectory) GetByID(subscriberID string) (event.Subscriber, bool) {
+	item, exist := d.storage[subscriberID]
+
+	return item, exist
+}
+
+// Create a new disconnected directory subscriber by its ID
 func (d *dispatchDirectory) New(subscriberID string) {
 	s := d.subscriberFactory(subscriberID)
 
 	d.storage[subscriberID] = s
 }
 
-// Subscribe perform subscriber subscription to the subscribers directory
+// Subscribe register a subscriber value to directory
 func (d *dispatchDirectory) Subscribe(s event.Subscriber) {
 	d.storage[s.GetID()] = s
 }
@@ -57,4 +64,13 @@ func (d *dispatchDirectory) Broadcast(e event.Event) {
 // If they are not registered in the directory, create them.
 func (d *dispatchDirectory) SenderAndRecipientFromEvent(e event.Event) (event.Subscriber, event.Subscriber) {
 	return d.GetOrCreate(e.SenderID()), d.GetOrCreate(e.RecipientID())
+}
+
+// NewDirectory return an initialized directory which use subscriberFactory to
+// generate new subscriber objects
+func NewDirectory(subscriberFactory event.SubscriberFactoryType) *dispatchDirectory {
+	return &dispatchDirectory{
+		storage:           map[string]event.Subscriber{},
+		subscriberFactory: subscriberFactory,
+	}
 }
