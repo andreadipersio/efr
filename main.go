@@ -1,4 +1,4 @@
-// Run an event forwarder, using maze.NewUser as subscriber.
+// Run event forwarder using followersmaze event and subscriber implementation
 package main
 
 import (
