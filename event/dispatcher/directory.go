@@ -1,6 +1,10 @@
 package dispatcher
 
-import "github.com/andreadipersio/efr/event"
+import (
+	"log"
+
+	"github.com/andreadipersio/efr/event"
+)
 
 // dispatchDirectory provide storing of subscribers by their ids
 type dispatchDirectory struct {
@@ -31,6 +35,7 @@ func (d *dispatchDirectory) GetByID(subscriberID string) (event.Subscriber, bool
 
 // Create a new disconnected directory subscriber by its ID
 func (d *dispatchDirectory) New(subscriberID string) {
+	log.Printf("subscriber %v registered to directory", subscriberID)
 	s := d.subscriberFactory(subscriberID)
 
 	d.storage[subscriberID] = s
@@ -38,6 +43,7 @@ func (d *dispatchDirectory) New(subscriberID string) {
 
 // Subscribe register a subscriber value to directory
 func (d *dispatchDirectory) Subscribe(s event.Subscriber) {
+	log.Printf("subscriber %v subscribed to directory", s)
 	d.storage[s.GetID()] = s
 }
 
@@ -49,12 +55,15 @@ func (d *dispatchDirectory) UnsubscribeAll() {
 			s.Disconnect()
 		}
 
+		log.Printf("subscriber %v unsubscribed from directory", subscriberID)
+
 		delete(d.storage, subscriberID)
 	}
 }
 
 // Broadcast send event e to all subscribers in the directory
 func (d *dispatchDirectory) Broadcast(e event.Event) {
+	log.Printf("Broadcast event %v", e.SequenceNum())
 	for _, s := range d.storage {
 		s.SendEvent(e)
 	}
