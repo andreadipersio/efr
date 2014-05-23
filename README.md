@@ -100,3 +100,4 @@ used in *main.go*, implementing the basic events of any social service (follow, 
 - Better logging (log/syslog?)
 - Both resequencers should have a timeout parameter, so if timeout happen resequencer can be flushed
 - More testing for edge cases, disconnections, etc
+- Resequencer should be on a separate package and run as a goroutine. This way would be possible to resequence events coming from multiple event source
