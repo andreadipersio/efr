@@ -9,10 +9,11 @@ Given a stream of unordered events, forward them
 in the correct order to all connected clients, in a social graph fashion.
 
 ### usage
-Install using `go install` and run by invoking `efr`
+Install using `go get` and `go install` and run by invoking `efr`
 
 ```shell
 cd $GOPATH
+go get github.com/andreadipersio/efr
 go install github.com/andreadipersio/efr
 bin/efr
 ```
