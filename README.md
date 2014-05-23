@@ -29,6 +29,8 @@ This will start the program with default values:
 
 ## Components
 
+[Flow](https://www.dropbox.com/s/qe08veyzsurn0m1/eft-diagram.png)
+
 ### event
 It provide the `Event` and `Subscriber` interface
 
@@ -88,8 +90,6 @@ them as disconnected subscriber if they do not exist) and invoke ther `HandleEve
 
 - EventSourceClosed channel: When a value is received through this channel, unsubscribe all the clients
 and close the connection
-
-[Diagram](https://www.dropbox.com/s/qe08veyzsurn0m1/eft-diagram.png)
 
 ### example
 Contains demo implementations for **event.Subscriber** and **event.Event**,
