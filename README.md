@@ -94,3 +94,9 @@ and close the connection
 ### example
 Contains demo implementations for **event.Subscriber** and **event.Event**,
 used in *main.go*, implementing the basic events of any social service (follow, unfollow, etc).
+
+### TODO
+
+- Better logging (log/syslog?)
+- Both resequencers should have a timeout parameter, so if timeout happen resequencer can be flushed
+- More testing for edge cases, disconnections, etc
