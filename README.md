@@ -3,6 +3,11 @@ efr
 
 [![GoDoc](https://godoc.org/github.com/andreadipersio/efr?status.png)](https://godoc.org/github.com/andreadipersio/efr)
 
+## Why?
+This codebase is my solution to the coding exercise of a company I have been working for several years ago.
+
+### Introduction
+
 *efr* stands for **Event Forwarder**.
 
 Given a stream of unordered events, forward them
